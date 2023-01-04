@@ -21,7 +21,8 @@ while True:
     for i in range(num_alerts):
         if parse_json['features'][i]['properties']['id'] not in alertcache:
             print(parse_json['features'][i]['properties']['headline'][:256])
-            notification.notify(title="Heads Up!", message=parse_json['features'][i]['properties']['headline'][:256], app_name="Heads Up!", timeout=10)
+            print(parse_json['features'][i]['properties']['description'])
+            notification.notify(title="Heads Up! - Check app for more details.", message=parse_json['features'][i]['properties']['headline'][:256], app_name="Heads Up!", ticker="Weather Alert", timeout=10)
             alertcache.append(parse_json['features'][i]['properties']['id'])
     print(alertcache)
     print("checking for new alerts in " + str(sleeptime) + " seconds...")
