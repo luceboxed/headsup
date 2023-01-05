@@ -4,6 +4,7 @@ import json
 import requests
 import time
 import PySimpleGUI as sg
+from datetime import datetime
 
 def checkAlerts():
     response_api = requests.get(url + lat + ',' + lon)
@@ -13,8 +14,14 @@ def checkAlerts():
             num_alerts = len(parse_json['features'])
     except:
             num_alerts = 0
-    print(num_alerts)
+    print("checking @ " + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " - " + str(num_alerts) + " currently active")
     if num_alerts > 0:
+        #remove expired alerts
+        for i in reversed(range(len(alertcache))):
+            if alertcache[i] not in parse_json['features'][i]['properties']['id']:
+                print("removing " + alertheadlines[i] + " - expired, cancelled, or updated")
+                del alertcache[i]
+                del alertheadlines[i]
         for i in range(num_alerts):
             if parse_json['features'][i]['properties']['id'] not in alertcache:
                 print("found new " + parse_json['features'][i]['properties']['headline'][:256])
@@ -22,6 +29,7 @@ def checkAlerts():
                 alertcache.append(parse_json['features'][i]['properties']['id'])
                 alertheadlines.append(parse_json['features'][i]['properties']['headline'][:256])
                 window['Alerts:'].update(alertheadlines)
+                window['alertcount'].update("You have " + str(num_alerts) + " alerts in your area.")
             else:
                 print("already seen this one - skipping " + parse_json['features'][i]['properties']['event'][:256])
 
@@ -44,12 +52,12 @@ print(num_alerts)
 print(parse_json['title'])
 
 # GUI
-layout = [[sg.Text("Heads Up!")],
-            [sg.Text("You have " + str(num_alerts) + " alerts in your area.")],
+frame_layout = [[sg.Text("You have " + str(num_alerts) + " alerts in your area.", key='alertcount')],
             [sg.Text("Alerts:")],
             [sg.Listbox(values=alertheadlines, size=(60, 20), key='Alerts:', enable_events=True)],
             [sg.Button('Exit')]]
-window = sg.Window('Heads Up!', layout)
+layout = [[sg.Frame('Heads Up!', frame_layout, font='Any 18', title_color='red')]]
+window = sg.Window('Heads Up! for ' + lat + "," + lon, layout)
 cooltime = time.time()
 initialcheck = False
 while True:
@@ -57,8 +65,12 @@ while True:
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
     #show alert details if clicked in listbox
-    if event == 'Alerts:':
-        sg.Popup(parse_json['features'][window['Alerts:'].get_indexes()[0]]['properties']['description'], title=parse_json['features'][window['Alerts:'].get_indexes()[0]]['properties']['parameters']['NWSheadline'][0], non_blocking=True, keep_on_top=True)
+    try:
+        if event == 'Alerts:':
+            sg.Popup(parse_json['features'][window['Alerts:'].get_indexes()[0]]['properties']['event'] + "\nEffective " + parse_json['features'][window['Alerts:'].get_indexes()[0]]['properties']['onset'] + "\nExpires " + parse_json['features'][window['Alerts:'].get_indexes()[0]]['properties']['expires'] +"\n" + parse_json['features'][window['Alerts:'].get_indexes()[0]]['properties']['description']
+            ,title=parse_json['features'][window['Alerts:'].get_indexes()[0]]['properties']['parameters']['NWSheadline'][0], non_blocking=True, keep_on_top=True)
+    except:
+        sg.Popup("No alert details available or lookup failed.", title="No details", non_blocking=True, keep_on_top=True)
     if initialcheck == False:
         checkAlerts()
         initialcheck = True
