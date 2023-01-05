@@ -6,6 +6,9 @@ import time
 import PySimpleGUI as sg
 
 def checkAlerts():
+    response_api = requests.get(url + lat + ',' + lon)
+    data = response_api.text
+    parse_json = json.loads(data)
     try:
             num_alerts = len(parse_json['features'])
     except:
@@ -14,19 +17,18 @@ def checkAlerts():
     if num_alerts > 0:
         for i in range(num_alerts):
             if parse_json['features'][i]['properties']['id'] not in alertcache:
-                print(parse_json['features'][i]['properties']['headline'][:256])
-                print(parse_json['features'][i]['properties']['description'])
+                print("found new " + parse_json['features'][i]['properties']['headline'][:256])
                 notification.notify(title="Heads Up! - Check app for more details.", message=parse_json['features'][i]['properties']['headline'][:256], app_name="Heads Up!", ticker="Weather Alert", timeout=10)
                 alertcache.append(parse_json['features'][i]['properties']['id'])
                 alertheadlines.append(parse_json['features'][i]['properties']['headline'][:256])
                 window['Alerts:'].update(alertheadlines)
             else:
-                print("already seen this one - skipping")
+                print("already seen this one - skipping " + parse_json['features'][i]['properties']['event'][:256])
 
 url = "https://api.weather.gov/alerts/active?point="
 lat = input("Please enter the latitude of your location.\n> ")
 lon = input("Please enter the longitude of your location.\n> ")
-sleeptime = int(input("How many seconds would you like to wait between checks?\n> "))
+sleeptime = int(input("How many seconds would you like to wait between checks?\nRecommended time is 60+ seconds.\n> "))
 alertcache = []
 alertheadlines = []
 response_api = requests.get(url + lat + ',' + lon)
