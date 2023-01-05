@@ -33,10 +33,10 @@ def checkAlerts():
             else:
                 print("already seen this one - skipping " + parse_json['features'][i]['properties']['event'][:256])
 
+lat = sg.popup_get_text('Please enter your latitude.', 'Heads Up! - Location', default_text='35.155')
+lon = sg.popup_get_text('Please enter your longitude.', 'Heads Up! - Location', default_text='-90.052')
+sleeptime = int(sg.popup_get_text('How many seconds would you like to wait between checks?', 'Heads Up! - Check Frequency', default_text='60'))
 url = "https://api.weather.gov/alerts/active?point="
-lat = input("Please enter the latitude of your location.\n> ")
-lon = input("Please enter the longitude of your location.\n> ")
-sleeptime = int(input("How many seconds would you like to wait between checks?\nRecommended time is 60+ seconds.\n> "))
 alertcache = []
 alertheadlines = []
 response_api = requests.get(url + lat + ',' + lon)
