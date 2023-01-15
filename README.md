@@ -6,7 +6,7 @@ very much still a work in progress. i'm still not that good at python, sorry if 
 current features:
 
 - choose a coordinate to watch for alerts
-- (tested on windows only but should work for linux and mac) pushes a notification if a new alert is found
+- pushes a notification if a new alert is found (not tested on macOS)
 - customize the time between checking for new alerts
 - click on an alert in the app for more details
 
