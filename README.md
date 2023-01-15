@@ -11,3 +11,4 @@ current features:
 - click on an alert in the app for more details
 
 ![A picture of the Heads Up! app, showing its terminal and app. The app displays 2 Avalanche Warnings and a Winter Storm Watch. The Winter Storm Watch is selected and additional info is on screen. A notification about the Avalanche Warning can be seen in the corner.](https://raw.githubusercontent.com/spikeyscout/headsup/2b2ad11f2dc583d69bde8a0b6c8b356fc77b4a82/img/img1.png)
+![A picture of the Heads Up! app, running on Linux.](https://raw.githubusercontent.com/spikeyscout/headsup/2b2ad11f2dc583d69bde8a0b6c8b356fc77b4a82/img/img2.png)
