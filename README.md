@@ -1,5 +1,5 @@
 # Heads Up!
-Up-to-date watch, warning, and advisory messages for a selected location using the National Weather Service [API](https://api.weather.gov/).
+Up-to-date watch, warning, and advisory messages for a selected location using the [National Weather Service API](https://www.weather.gov/documentation/services-web-api).
 
 *Very much still a work in progress, sorry for messy code!*
 
