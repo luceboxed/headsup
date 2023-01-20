@@ -21,7 +21,7 @@ pip install -r /path_here/headsup/requirements.txt
 
 ## Known Issues
 
-macOS has not been tested, but notifications are expected to work properly.
+When an [alert expires or falls off, the app tends to crash.](https://github.com/spikeyscout/headsup/issues/1)
 
 Improper coordinates cause the app to crash.
 
