@@ -10,20 +10,11 @@ Up-to-date watch, warning, and advisory messages for a selected location using t
 - Customize the time between checking for new alerts
 - Click on an alert in the app for more details
 
-## Prerequisites
-
-You will need the latest version of [Python](https://www.python.org/downloads/) installed.
-
-To install the required packages, run this command in your terminal.
-```
-pip install -r /path_here/headsup/requirements.txt
-```
-
 ## Known Issues
 
 When an [alert expires or falls off, the app tends to crash.](https://github.com/spikeyscout/headsup/issues/1)
 
-Improper coordinates cause the app to crash.
+Improper coordinates cause the app to crash. This is due to it not being handled, will be added soon.
 
 ## Screenshots
 
