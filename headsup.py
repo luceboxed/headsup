@@ -81,7 +81,7 @@ while True:
     if event == (sg.WIN_CLOSED or 'Exit'):
         break
     #restarts script to input new coordinates
-    if event == 'New':
+    elif event == 'New':
         restart()
 
     #show alert details if clicked in listbox
