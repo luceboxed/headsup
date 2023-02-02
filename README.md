@@ -6,7 +6,7 @@ Up-to-date watch, warning, and advisory messages for a selected location using t
 ## Current Features
 
 - Choose a coordinate to watch for alerts
-- Pushes a notification if a new alert is found (not tested on macOS)
+- Pushes a notification if a new alert is found
 - Customize the time between checking for new alerts
 - Click on an alert in the app for more details
 
