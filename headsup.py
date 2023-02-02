@@ -5,6 +5,7 @@ import requests
 import time
 import PySimpleGUI as sg
 from datetime import datetime
+import os, sys
 
 def checkAlerts():
     response_api = requests.get(url + lat + ',' + lon)
@@ -33,9 +34,24 @@ def checkAlerts():
             else:
                 print("already seen this one - skipping " + parse_json['features'][i]['properties']['event'][:256])
 
-lat = sg.popup_get_text('Please enter your latitude.', 'Heads Up! - Location', default_text='35.155')
-lon = sg.popup_get_text('Please enter your longitude.', 'Heads Up! - Location', default_text='-90.052')
-sleeptime = int(sg.popup_get_text('How many seconds would you like to wait between checks?', 'Heads Up! - Check Frequency', default_text='60'))
+# creates functions for getting coordinates and sleeptime
+def get_lat():
+    lat = sg.popup_get_text('Please enter your latitude.', 'Heads Up! - Location', default_text='35.155')
+    return lat
+def get_lon():
+    lon = sg.popup_get_text('Please enter your longitude.', 'Heads Up! - Location', default_text='-90.052')
+    return lon
+def get_sleep():
+    sleeptime = int(sg.popup_get_text('How many seconds would you like to wait between checks?', 'Heads Up! - Check Frequency', default_text='60'))
+    return sleeptime
+
+# creates function for restarting script
+def restart():
+    os.execv(sys.executable, [os.path.basename(sys.executable)] + sys.argv)
+
+lat = get_lat()
+lon = get_lon()
+sleeptime = get_sleep()
 url = "https://api.weather.gov/alerts/active?point="
 alertcache = []
 alertheadlines = []
@@ -55,15 +71,19 @@ print(parse_json['title'])
 frame_layout = [[sg.Text("You have " + str(num_alerts) + " alerts in your area.", key='alertcount')],
             [sg.Text("Alerts:")],
             [sg.Listbox(values=alertheadlines, size=(60, 20), key='Alerts:', enable_events=True)],
-            [sg.Button('Exit')]]
+            [sg.Button('New'), sg.Button('Exit')]]
 layout = [[sg.Frame('Heads Up!', frame_layout, font='Any 18', title_color='red')]]
 window = sg.Window('Heads Up! for ' + lat + "," + lon, layout)
 cooltime = time.time()
 initialcheck = False
 while True:
     event, values = window.read(timeout=1000)
-    if event == sg.WIN_CLOSED or event == 'Exit':
+    if event == (sg.WIN_CLOSED or 'Exit'):
         break
+    #restarts script to input new coordinates
+    if event == 'New':
+        restart()
+
     #show alert details if clicked in listbox
     try:
         if event == 'Alerts:':
