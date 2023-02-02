@@ -1,1 +1,0 @@
-handles new alerts just fine, but once one falls off and it attempts to remove them index out of error. will need to fix
