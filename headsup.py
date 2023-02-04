@@ -5,7 +5,7 @@ import requests
 import time
 import PySimpleGUI as sg
 from datetime import datetime
-import os, sys
+import tkinter
 
 def checkAlerts():
     response_api = requests.get(url + lat + ',' + lon)
@@ -45,10 +45,6 @@ def get_sleep():
     sleeptime = int(sg.popup_get_text('How many seconds would you like to wait between checks?', 'Heads Up! - Check Frequency', default_text='60'))
     return sleeptime
 
-# creates function for restarting script
-def restart():
-    os.execv(sys.executable, [os.path.basename(sys.executable)] + sys.argv)
-
 lat = get_lat()
 lon = get_lon()
 sleeptime = get_sleep()
@@ -63,7 +59,7 @@ parse_json = json.loads(data)
 try:
     num_alerts = len(parse_json['features'])
 except:
-    num_alerts = 0
+        num_alerts = 0
 print(num_alerts)
 print(parse_json['title'])
 
@@ -80,9 +76,26 @@ while True:
     event, values = window.read(timeout=1000)
     if event == (sg.WIN_CLOSED or 'Exit'):
         break
-    #restarts script to input new coordinates
-    elif event == 'New':
-        restart()
+    # repeats script to input new coordinates
+    # needs improvement, but functions
+    if event == 'New':
+        lat = get_lat()
+        lon = get_lon()
+        sleeptime = get_sleep()
+        url = "https://api.weather.gov/alerts/active?point="
+        alertcache = []
+        alertheadlines = []
+        response_api = requests.get(url + lat + ',' + lon)
+        data = response_api.text
+        parse_json = json.loads(data)
+        print(str(response_api))
+        print(url + lat + ',' + lon)
+        try:
+            num_alerts = len(parse_json['features'])
+        except:
+            num_alerts = 0
+        print(num_alerts)
+        print(parse_json['title'])
 
     #show alert details if clicked in listbox
     try:
